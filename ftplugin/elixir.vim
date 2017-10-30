@@ -1,6 +1,6 @@
-if exists('g:loaded_mix_format') || &compatible
-  finish
-endif
+" if exists('g:loaded_mix_format') || &compatible
+"   finish
+" endif
 
 function! s:mix_format_file() abort
   let filename = expand('%:p')
@@ -13,9 +13,25 @@ function! s:mix_format_file_diff() abort
   execute 'silent write' fnameescape(tempfile)
   call system('mix format '. shellescape(tempfile))
   diffthis
-  vnew
+
+  let curwin = winnr()
+
+  for win in range(1, winnr('$'))
+    if getbufvar(winbufnr(win), 'mix_format_diff', 0)
+      execute win 'wincmd w'
+      %delete
+    endif
+  endfor
+
+  if winnr() == curwin
+    vnew
+  endif
+
+  let b:mix_format_diff = 1
+
   execute 'silent read' fnameescape(tempfile)
-  set filetype=elixir buftype=nofile nobuflisted bufhidden=wipe
+  runtime syntax/elixir.vim
+  set buftype=nofile nobuflisted bufhidden=wipe
   silent 0delete _
   diffthis
 
