@@ -35,7 +35,7 @@ function! s:mix_format_file_diff() abort
   silent 0delete _
   diffthis
 
-  nnoremap <buffer> q :close<cr>
+  nnoremap <buffer><silent> q :close<cr>
 
   augroup MixFormat
     autocmd!
