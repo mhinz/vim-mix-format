@@ -1,6 +1,6 @@
-" if exists('g:loaded_mix_format') || &compatible
-"   finish
-" endif
+if exists('b:loaded_mix_format') || &compatible
+  finish
+endif
 
 function! s:mix_format_file() abort
   let filename = expand('%:p')
@@ -38,4 +38,4 @@ endfunction
 command! -buffer -bar MixFormatFile     call <sid>mix_format_file()
 command! -buffer -bar MixFormatFileDiff call <sid>mix_format_file_diff()
 
-let g:loaded_mix_format = 1
+let b:loaded_mix_format = 1
