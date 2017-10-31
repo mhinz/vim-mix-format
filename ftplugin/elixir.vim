@@ -10,36 +10,25 @@ endfunction
 
 function! s:mix_format_file_diff() abort
   diffthis
-
   let tempfile = tempname()
   execute 'silent write' fnameescape(tempfile)
 
-  let curwin = winnr()
-  for win in range(1, winnr('$'))
-    if getbufvar(winbufnr(win), 'mix_format_diff', 0)
-      execute win 'wincmd w'
-      %delete
-    endif
-  endfor
-  if winnr() == curwin
+  if +get(g:, 'mix_format_win_id') && win_gotoid(g:mix_format_win_id)
+    %delete
+  else
     vnew
-    let b:mix_format_diff = 1
+    let g:mix_format_win_id = win_getid()
+    set buftype=nofile nobuflisted bufhidden=wipe
+    runtime syntax/elixir.vim
   endif
 
   call system('mix format '. shellescape(tempfile))
   execute 'silent read' fnameescape(tempfile)
-
-  if filewritable(tempfile)
-    call delete(tempfile)
-  endif
-
-  runtime syntax/elixir.vim
-  set buftype=nofile nobuflisted bufhidden=wipe
   silent 0delete _
+  silent! call delete(tempfile)
   diffthis
 
   nnoremap <buffer><silent> q :close<cr>
-
   augroup mix_format
     autocmd!
     autocmd BufWipeout <buffer> silent diffoff!
