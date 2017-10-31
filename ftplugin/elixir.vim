@@ -9,7 +9,6 @@ function! s:mix_format_file() abort
 endfunction
 
 function! s:mix_format_file_diff() abort
-  diffthis
   let tempfile = tempname()
   execute 'silent write' fnameescape(tempfile)
 
@@ -24,15 +23,19 @@ function! s:mix_format_file_diff() abort
 
   call system('mix format '. shellescape(tempfile))
   execute 'silent read' fnameescape(tempfile)
-  silent 0delete _
   silent! call delete(tempfile)
-  diffthis
+  silent 0delete _
 
   nnoremap <buffer><silent> q :close<cr>
   augroup mix_format
     autocmd!
     autocmd BufWipeout <buffer> silent diffoff!
   augroup END
+
+  diffthis
+  wincmd p
+  diffthis
+  diffupdate
 endfunction
 
 command! -buffer -bar MixFormatFile     call <sid>mix_format_file()
