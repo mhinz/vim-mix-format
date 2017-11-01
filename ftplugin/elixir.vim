@@ -37,7 +37,11 @@ endfunction
 function! s:mix_format_file_diff() abort
   let tempfile = tempname()
   execute 'silent write' fnameescape(tempfile)
-  let cmd = ['sh', '-c', 'mix format '.shellescape(tempfile)]
+  if has('win32') && &shell =~ 'cmd'
+    let cmd = 'mix format '. shellescape(tempfile)
+  else
+    let cmd = ['sh', '-c', 'mix format '. shellescape(tempfile)]
+  endif
   if has('nvim')
     call jobstart(cmd, {'on_exit': function('s:on_exit'), 'tempfile': tempfile})
   else
