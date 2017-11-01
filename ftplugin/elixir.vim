@@ -36,6 +36,18 @@ function! s:on_exit(_job, exitval, ...) dict abort
     return
   endif
 
+  call system(printf('diff %s %s', self.origfile, self.tempfile))
+  if !v:shell_error
+    echomsg 'No formatting issues found.'
+    if +get(g:, 'mix_format_win_id')
+      let winnr = win_id2win(g:mix_format_win_id)
+      if winnr
+        execute winnr 'close'
+      endif
+    endif
+    return
+  endif
+
   if +get(g:, 'mix_format_win_id') && win_gotoid(g:mix_format_win_id)
     %delete
   else
@@ -63,7 +75,7 @@ endfunction
 
 function! s:mix_format_file() abort
   let filename = expand('%:p')
-  call system('mix format '. fnameescape(filename))
+  call system('mix format '. shellescape(filename))
   edit
 endfunction
 
@@ -79,6 +91,7 @@ function! s:mix_format_file_diff() abort
 
   let options = {
         \ 'cmd':       type(cmd) == type([]) ? join(cmd) : cmd,
+        \ 'origfile':  expand('%:p'),
         \ 'tempfile':  tempfile,
         \ 'stdout':    [],
         \ 'stdoutbuf': [],
