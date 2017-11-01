@@ -43,9 +43,11 @@ function! s:mix_format_file_diff() abort
     let cmd = ['sh', '-c', 'mix format '. shellescape(tempfile)]
   endif
   if has('nvim')
-    call jobstart(cmd, {'on_exit': function('s:on_exit'), 'tempfile': tempfile})
+    silent! call jobstop(s:id)
+    let s:id = jobstart(cmd, {'on_exit': function('s:on_exit'), 'tempfile': tempfile})
   else
-    call job_start(cmd, {'close_cb': function('s:on_exit', {'tempfile': tempfile})})
+    silent! call job_stop(s:id)
+    let s:id = job_start(cmd, {'close_cb': function('s:on_exit', {'tempfile': tempfile})})
   endif
 endfunction
 
