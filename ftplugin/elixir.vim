@@ -6,7 +6,7 @@ function! s:on_exit(...) dict abort
   if +get(g:, 'mix_format_win_id') && win_gotoid(g:mix_format_win_id)
     %delete
   else
-    vnew
+    rightbelow vnew
     let g:mix_format_win_id = win_getid()
     set buftype=nofile nobuflisted bufhidden=wipe
     runtime syntax/elixir.vim
