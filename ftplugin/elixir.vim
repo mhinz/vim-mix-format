@@ -53,6 +53,8 @@ function! s:on_exit(_job, exitval, ...) dict abort
     return
   end
 
+  diffthis
+
   if +get(g:, 'mix_format_win_id') && win_gotoid(g:mix_format_win_id)
     %delete
   else
@@ -65,17 +67,14 @@ function! s:on_exit(_job, exitval, ...) dict abort
   execute 'silent read' fnameescape(self.difffile)
   silent! call delete(self.difffile)
   silent 0delete _
+  diffthis
+  normal! ]c
 
   nnoremap <buffer><silent> q :close<cr>
   augroup mix_format
     autocmd!
     autocmd BufWipeout <buffer> silent diffoff!
   augroup END
-
-  diffthis
-  wincmd p
-  diffthis
-  diffupdate
 endfunction
 
 function! s:get_cmd_from_file(filename) abort
