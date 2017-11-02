@@ -75,6 +75,10 @@ function! s:on_exit(_job, exitval, ...) dict abort
     autocmd!
     autocmd BufWipeout <buffer> silent diffoff!
   augroup END
+
+  if exists('#User#MixFormatDiff')
+    doautocmd <nomodeline> User MixFormatDiff
+  endif
 endfunction
 
 function! s:get_cmd_from_file(filename) abort
