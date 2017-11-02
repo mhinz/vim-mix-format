@@ -131,4 +131,8 @@ endfunction
 command! -buffer -bar MixFormatFile     call <sid>mix_format_file(0+'diffmode')
 command! -buffer -bar MixFormatFileDiff call <sid>mix_format_file(1+'diffmode')
 
+if get(g:, 'mix_format_on_save')
+  autocmd BufWritePre *.{ex,exs} noautocmd write | call s:mix_format_file(0+'diffmode')
+endif
+
 let b:loaded_mix_format = 1
