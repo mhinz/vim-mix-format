@@ -54,6 +54,7 @@ function! s:on_exit(_job, exitval, ...) dict abort
   end
 
   diffthis
+  set foldmethod=manual
 
   if +get(g:, 'mix_format_win_id') && win_gotoid(g:mix_format_win_id)
     %delete
@@ -68,6 +69,7 @@ function! s:on_exit(_job, exitval, ...) dict abort
   silent! call delete(self.difffile)
   silent 0delete _
   diffthis
+  set foldmethod=manual
   normal! ]c
 
   nnoremap <buffer><silent> q :close<cr>
