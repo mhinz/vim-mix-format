@@ -3,8 +3,12 @@
 Elixir 1.6 introduced a code formatter that can be called with `mix format`.
 This plugin provides the integration into Vim 8 and Neovim.
 
-`:MixFormat` will format the current file right away. If you want to always
-format on saving, put `let g:mix_format_on_save = 1` in your vimrc.
+To format the current file, use `:MixFormat`. To do this automatically on
+saving, put this in your vimrc:
+
+```vim
+let g:mix_format_on_save = 1
+```
 
 The formatter is not perfect yet, so `:MixFormatDiff` will open a diff window
 that can be used for previewing the changes or picking only those that seem
