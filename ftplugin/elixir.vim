@@ -91,7 +91,7 @@ function! s:get_cmd_from_file(filename) abort
   return ['sh', '-c', cmd]
 endfunction
 
-function! s:mix_format_file(diffmode) abort
+function! s:mix_format(diffmode) abort
   let origfile = expand('%:p')
   if a:diffmode
     let difffile = tempname()
@@ -128,11 +128,11 @@ function! s:mix_format_file(diffmode) abort
   endif
 endfunction
 
-command! -buffer -bar MixFormatFile     call <sid>mix_format_file(0+'diffmode')
-command! -buffer -bar MixFormatFileDiff call <sid>mix_format_file(1+'diffmode')
+command! -buffer -bar MixFormat     call <sid>mix_format(0+'diffmode')
+command! -buffer -bar MixFormatDiff call <sid>mix_format(1+'diffmode')
 
 if get(g:, 'mix_format_on_save')
-  autocmd BufWritePre *.{ex,exs} noautocmd write | call s:mix_format_file(0+'diffmode')
+  autocmd BufWritePre *.{ex,exs} noautocmd write | call s:mix_format(0+'diffmode')
 endif
 
 let b:loaded_mix_format = 1
