@@ -22,6 +22,13 @@ window. `]c` and `[c` jump between the changes.
 If you're not used to Vim's diff mode, [watch this
 screencast](http://vimcasts.org/episodes/comparing-buffers-with-vimdiff).
 
+If the diff window is set up, an user event is emitted. It can be used to set
+different settings or switch back to the source window:
+
+```vim
+autocmd User MixFormatDiff wincmd p
+```
+
 ## Installation
 
 Use your [favorite plugin manager](https://github.com/mhinz/vim-galore#managing-plugins), e.g.
