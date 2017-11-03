@@ -49,7 +49,7 @@ function! s:on_exit(_job, exitval, ...) dict abort
       return
     endif
   else
-    edit!
+    silent edit!
     return
   end
 
