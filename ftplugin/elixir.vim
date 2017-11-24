@@ -84,7 +84,10 @@ function! s:on_exit(_job, exitval, ...) dict abort
 endfunction
 
 function! s:get_cmd_from_file(filename) abort
-  let cmd = 'mix format '. shellescape(a:filename)
+
+  let mix_format_cmd = get(g:, 'mix_format_cmd', 'mix format')
+
+  let cmd = mix_format_cmd . ' ' . shellescape(a:filename)
   if has('win32') && &shell =~ 'cmd'
     return cmd
   endif

@@ -10,6 +10,15 @@ saving, put this in your vimrc:
 let g:mix_format_on_save = 1
 ```
 
+## Custom Path of mix
+
+If you don't have elixir 1.6 installed system wide, you can check it out in
+one of your dirs and compile it and tweak the mix format cmd like below
+
+```vim
+let g:mix_format_cmd = '/home/dan/sr/elixir/bin/elixir /home/dan/sr/elixir/bin/mix format '
+```
+
 The formatter is not perfect yet, so `:MixFormatDiff` will open a diff window
 that can be used for previewing the changes or picking only those that seem
 reasonable.
