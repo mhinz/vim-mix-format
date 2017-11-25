@@ -10,6 +10,13 @@ saving, put this in your vimrc:
 let g:mix_format_on_save = 1
 ```
 
+If you're not using Elixir 1.6 in your project, but want to use the formatter
+anyway, you can specify the bin directory of an alternative Elixir installation:
+
+```vim
+let g:mix_format_elixir_bin_path = '~/repo/elixir/bin'
+```
+
 The formatter is not perfect yet, so `:MixFormatDiff` will open a diff window
 that can be used for previewing the changes or picking only those that seem
 reasonable.
