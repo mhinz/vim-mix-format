@@ -88,7 +88,7 @@ function! s:on_exit(_job, exitval, ...) dict abort
 endfunction
 
 function! s:get_cmd_from_file(filename) abort
-  let l:cmd = build_cmd(a:filename)
+  let l:cmd = s:build_cmd(a:filename)
 
   if has('win32') && &shell =~ 'cmd'
     return l:cmd
@@ -104,7 +104,8 @@ function! s:build_cmd(filename) abort
     let l:cmd = l:base_cmd . shellescape(a:filename)
   else
     let l:cmd = l:path .'/bin/elixir '. l:path . '/bin/'. l:base_cmd . shellescape(a:filename)
-  end
+  endif
+  return l:cmd
 endfunction
 
 function! s:mix_format(diffmode) abort
