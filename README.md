@@ -14,6 +14,13 @@ The formatter is not perfect yet, so `:MixFormatDiff` will open a diff window
 that can be used for previewing the changes or picking only those that seem
 reasonable.
 
+If you're not using Elixir 1.6 in your project, but want to be able to use `mix
+format`, you can specify a specific path for the elixir executable as such:
+
+```vim
+let g:mix_format_elixir_path = '~/path/to/elixir'
+```
+
 ![demo](demo.gif)
 
 `dp` pushes changes from the diff window to the source file. `q` closes the diff
