@@ -84,11 +84,24 @@ function! s:on_exit(_job, exitval, ...) dict abort
 endfunction
 
 function! s:get_cmd_from_file(filename) abort
-  let cmd = 'mix format '. shellescape(a:filename)
+  let cmd = s:build_cmd(a:filename)
   if has('win32') && &shell =~ 'cmd'
     return cmd
   endif
   return ['sh', '-c', cmd]
+endfunction
+
+function! s:build_cmd(filename) abort
+  let elixir_bin_path = get(g:, 'mix_format_elixir_bin_path')
+
+  if empty(elixir_bin_path)
+    return 'mix format '. shellescape(a:filename)
+  endif
+
+  return printf('%s %s %s',
+        \ elixir_bin_path .'/elixir',
+        \ elixir_bin_path .'/mix format',
+        \ shellescape(a:filename))
 endfunction
 
 function! s:mix_format(diffmode) abort
