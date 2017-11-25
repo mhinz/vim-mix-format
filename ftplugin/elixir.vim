@@ -2,6 +2,10 @@ if exists('b:loaded_mix_format') || &compatible
   finish
 endif
 
+if !exists('g:mix_format_elixir_path')
+  let g:mix_format_elixir_path = ''
+endif
+
 function! s:on_stdout_nvim(_job, data, _event) dict abort
   if empty(a:data[-1])
     " Second-last item is the last complete line in a:data.
@@ -84,11 +88,24 @@ function! s:on_exit(_job, exitval, ...) dict abort
 endfunction
 
 function! s:get_cmd_from_file(filename) abort
-  let cmd = 'mix format '. shellescape(a:filename)
+  let l:cmd = s:build_cmd(a:filename)
+
   if has('win32') && &shell =~ 'cmd'
-    return cmd
+    return l:cmd
   endif
-  return ['sh', '-c', cmd]
+  return ['sh', '-c', l:cmd]
+endfunction
+
+function! s:build_cmd(filename) abort
+  let l:path = get(g:, 'mix_format_elixir_path')
+  let l:base_cmd = 'mix format '
+
+  if l:path ==? ''
+    let l:cmd = l:base_cmd . shellescape(a:filename)
+  else
+    let l:cmd = l:path .'/bin/elixir '. l:path . '/bin/'. l:base_cmd . shellescape(a:filename)
+  endif
+  return l:cmd
 endfunction
 
 function! s:mix_format(diffmode) abort
