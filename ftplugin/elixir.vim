@@ -30,9 +30,12 @@ function! s:on_exit(_job, exitval, ...) dict abort
     echohl ErrorMsg
     echomsg 'Failed: '. self.cmd
     echohl NONE
+    " Write to history..
     for line in self.stdout
       echomsg line
     endfor
+    " Display multiple lines at once..
+    echo join(self.stdout, "\n")
     return
   endif
 
