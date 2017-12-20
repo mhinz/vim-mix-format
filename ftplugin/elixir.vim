@@ -27,15 +27,13 @@ endfunction
 
 function! s:on_exit(_job, exitval, ...) dict abort
   if a:exitval
+    execute len(self.stdout) > 14 ? 14 : len(self.stdout) 'new'
+    set buftype=nofile
+    put =join(self.stdout, \"\n\")
+    1delete
     echohl ErrorMsg
     echomsg 'Failed: '. self.cmd
     echohl NONE
-    " Write to history..
-    for line in self.stdout
-      echomsg line
-    endfor
-    " Display multiple lines at once..
-    echo join(self.stdout, "\n")
     return
   endif
 
