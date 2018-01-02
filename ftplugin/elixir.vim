@@ -50,7 +50,10 @@ function! s:on_exit(_job, exitval, ...) dict abort
       return
     endif
   else
+    let sol = &startofline
+    let &startofline = 0
     silent edit!
+    let &startofline = sol
     return
   end
 
