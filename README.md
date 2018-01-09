@@ -3,6 +3,10 @@
 Elixir 1.6 introduced a code formatter that can be called with `mix format`.
 This plugin provides the integration into Vim 8 and Neovim.
 
+![demo](demo.gif)
+
+## Usage
+
 To format the current file, use `:MixFormat`. To do this automatically on
 saving, put this in your vimrc:
 
@@ -20,8 +24,6 @@ let g:mix_format_elixir_bin_path = '~/repo/elixir/bin'
 The formatter is not perfect yet, so `:MixFormatDiff` will open a diff window
 that can be used for previewing the changes or picking only those that seem
 reasonable.
-
-![demo](demo.gif)
 
 `dp` pushes changes from the diff window to the source file. `q` closes the diff
 window. `]c` and `[c` jump between the changes.
