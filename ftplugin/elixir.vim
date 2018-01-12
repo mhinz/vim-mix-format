@@ -35,7 +35,7 @@ function! s:on_exit(_job, exitval, ...) dict abort
       execute len(self.stdout) > 14 ? 14 : len(self.stdout) 'new'
       set buftype=nofile
       put =join(self.stdout, \"\n\")
-     1delete
+      1delete
     endif
 
     echohl ErrorMsg
