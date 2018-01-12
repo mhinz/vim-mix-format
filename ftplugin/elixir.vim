@@ -27,10 +27,17 @@ endfunction
 
 function! s:on_exit(_job, exitval, ...) dict abort
   if a:exitval
-    execute len(self.stdout) > 14 ? 14 : len(self.stdout) 'new'
-    set buftype=nofile
-    put =join(self.stdout, \"\n\")
-    1delete
+    if get(g:, 'mix_format_silent_errors')
+      for line in self.stdout
+        echomsg line
+      endfor
+    else
+      execute len(self.stdout) > 14 ? 14 : len(self.stdout) 'new'
+      set buftype=nofile
+      put =join(self.stdout, \"\n\")
+     1delete
+    endif
+
     echohl ErrorMsg
     echomsg 'Failed: '. self.cmd
     echohl NONE
