@@ -31,15 +31,14 @@ function! s:on_exit(_job, exitval, ...) dict abort
       for line in self.stdout
         echomsg line
       endfor
+      echohl ErrorMsg | echo 'Formatting failed. Check :messages.' | echohl NONE
     else
       execute len(self.stdout) > 14 ? 14 : len(self.stdout) 'new'
       set buftype=nofile
       put =join(self.stdout, \"\n\")
       1delete
+      echohl ErrorMsg | echo 'Formatting failed.' | echohl NONE
     endif
-    echohl ErrorMsg
-    echomsg 'Failed: '. self.cmd
-    echohl NONE
     return
   endif
 
