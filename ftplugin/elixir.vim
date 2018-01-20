@@ -102,14 +102,18 @@ endfunction
 
 function! s:build_cmd(filename) abort
   let elixir_bin_path = get(g:, 'mix_format_elixir_bin_path')
+  let options = get(g:, 'mix_format_options', '--check-equivalent')
 
   if empty(elixir_bin_path)
-    return 'mix format '. shellescape(a:filename)
+    return printf('mix format %s %s',
+          \ options,
+          \ shellescape(a:filename))
   endif
 
-  return printf('%s %s %s',
+  return printf('%s %s %s %s',
         \ elixir_bin_path .'/elixir',
         \ elixir_bin_path .'/mix format',
+        \ options,
         \ shellescape(a:filename))
 endfunction
 
