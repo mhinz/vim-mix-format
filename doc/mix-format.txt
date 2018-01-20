@@ -33,6 +33,10 @@ OPTIONS                                                     *mix-format-options*
 >
   let g:mix_format_on_save = 1
 <
+* Set options for the formatter. See `mix help format` in the shell.
+>
+  let g:mix_format_options = '--check-equivalent'
+<
 * By default this plugin opens a window containing the stacktrace on errors.
   With this option enabled, there will be just a short message in the
   command-line bar. The stacktrace can still be looked up via `:messages`.
