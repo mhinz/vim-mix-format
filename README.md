@@ -1,7 +1,7 @@
 # vim-mix-format
 
-Elixir 1.6 introduced the code formatter `mix format`. This plugin provides its
-integration into Vim 8 and Neovim.
+Elixir 1.6 introduced the formatter: `mix format`. This plugin makes it easy to
+run the formatter asynchronously from within Vim 8 and Neovim.
 
 ![demo](demo.gif)
 
