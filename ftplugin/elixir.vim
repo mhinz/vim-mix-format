@@ -118,6 +118,11 @@ function! s:build_cmd(filename) abort
 endfunction
 
 function! s:mix_format(diffmode) abort
+  if &modified
+    echohl WarningMsg | echo 'Unsaved buffer. Quitting.' | echohl NONE
+    return
+  endif
+
   let origfile = expand('%:p')
   if a:diffmode
     let difffile = tempname()
