@@ -26,6 +26,11 @@ function! s:on_stdout_vim(_job, data) dict abort
 endfunction
 
 function! s:on_exit(_job, exitval, ...) dict abort
+  if filereadable(self.undofile)
+    execute 'silent rundo' self.undofile
+    call delete(self.undofile)
+  endif
+
   if a:exitval
     if get(g:, 'mix_format_silent_errors')
       for line in self.stdout
@@ -132,11 +137,15 @@ function! s:mix_format(diffmode) abort
   endif
   let cmd = s:get_cmd_from_file(difffile)
 
+  let undofile = tempname()
+  execute 'wundo!' undofile
+
   let options = {
         \ 'cmd':       type(cmd) == type([]) ? join(cmd) : cmd,
         \ 'diffmode':  a:diffmode,
         \ 'origfile':  origfile,
         \ 'difffile':  difffile,
+        \ 'undofile':  undofile,
         \ 'stdout':    [],
         \ 'stdoutbuf': [],
         \ }
