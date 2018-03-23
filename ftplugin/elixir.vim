@@ -38,10 +38,13 @@ function! s:on_exit(_job, exitval, ...) dict abort
       endfor
       echohl ErrorMsg | echo 'Formatting failed. Check :messages.' | echohl NONE
     else
-      execute len(self.stdout) > 14 ? 14 : len(self.stdout) 'new'
-      set buftype=nofile
-      put =join(self.stdout, \"\n\")
-      1delete
+      if !empty(self.stdout)
+        echomsg string(self.stdout)
+        execute len(self.stdout) > 14 ? 14 : len(self.stdout) 'new'
+        set buftype=nofile
+        put =join(self.stdout, \"\n\")
+        1delete
+      endif
       echohl ErrorMsg | echo 'Formatting failed.' | echohl NONE
     endif
     return
