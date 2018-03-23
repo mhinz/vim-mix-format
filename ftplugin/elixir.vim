@@ -136,6 +136,9 @@ function! s:mix_format(diffmode) abort
     let difffile = origfile
   endif
   let cmd = s:get_cmd_from_file(difffile)
+  if &verbose
+    echomsg 'MixFormat: '. join(cmd[2:])
+  endif
 
   let undofile = tempname()
   execute 'wundo!' undofile
