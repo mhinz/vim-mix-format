@@ -90,7 +90,7 @@ function! s:on_exit(_job, exitval, ...) dict abort
   normal! ]c
 
   nnoremap <buffer><silent> q :close<cr>
-  augroup mix_format
+  augroup mix_format_diff
     autocmd!
     autocmd BufWipeout <buffer> silent diffoff!
   augroup END
@@ -178,7 +178,9 @@ command! -buffer -bar MixFormat     call <sid>mix_format(0+'diffmode')
 command! -buffer -bar MixFormatDiff call <sid>mix_format(1+'diffmode')
 
 if get(g:, 'mix_format_on_save')
-  autocmd BufWritePre <buffer> noautocmd update | call s:mix_format(0+'diffmode')
+  augroup mix_format
+    autocmd BufWritePre <buffer> noautocmd update | call s:mix_format(0+'diffmode')
+  augroup END
 endif
 
 let b:loaded_mix_format = 1
