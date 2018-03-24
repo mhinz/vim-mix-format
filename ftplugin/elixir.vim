@@ -178,7 +178,7 @@ command! -buffer -bar MixFormat     call <sid>mix_format(0+'diffmode')
 command! -buffer -bar MixFormatDiff call <sid>mix_format(1+'diffmode')
 
 if get(g:, 'mix_format_on_save')
-  autocmd BufWritePre *.{ex,exs} noautocmd update | call s:mix_format(0+'diffmode')
+  autocmd BufWritePre <buffer> noautocmd update | call s:mix_format(0+'diffmode')
 endif
 
 let b:loaded_mix_format = 1
