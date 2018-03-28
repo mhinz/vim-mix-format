@@ -1,4 +1,6 @@
-if exists('b:loaded_mix_format') || &compatible
+if exists('b:loaded_mix_format')
+      \ || fnamemodify(expand('%'), ':e') == 'eex'
+      \ || &compatible
   finish
 endif
 
