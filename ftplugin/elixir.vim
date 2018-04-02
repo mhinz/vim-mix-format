@@ -28,7 +28,7 @@ function! s:on_stdout_vim(_job, data) dict abort
 endfunction
 
 function! s:on_exit(_job, exitval, ...) dict abort
-  let cur_win_id = win_getid()
+  let source_win_id = win_getid()
   call win_gotoid(self.win_id)
 
   if filereadable(self.undofile)
@@ -74,7 +74,7 @@ function! s:on_exit(_job, exitval, ...) dict abort
     silent edit!
     let &startofline = sol
     let &foldlevel = fdl
-    call win_gotoid(cur_win_id)
+    call win_gotoid(source_win_id)
     return
   end
 
