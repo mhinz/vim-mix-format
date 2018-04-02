@@ -65,10 +65,12 @@ function! s:on_exit(_job, exitval, ...) dict abort
       return
     endif
   else
+    let fdl = &foldlevel
     let sol = &startofline
     let &startofline = 0
     silent edit!
     let &startofline = sol
+    let &foldlevel = fdl
     return
   end
 
