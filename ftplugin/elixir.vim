@@ -28,6 +28,9 @@ function! s:on_stdout_vim(_job, data) dict abort
 endfunction
 
 function! s:on_exit(_job, exitval, ...) dict abort
+  let cur_win_id = win_getid()
+  call win_gotoid(self.win_id)
+
   if filereadable(self.undofile)
     execute 'silent rundo' self.undofile
     call delete(self.undofile)
@@ -71,6 +74,7 @@ function! s:on_exit(_job, exitval, ...) dict abort
     silent edit!
     let &startofline = sol
     let &foldlevel = fdl
+    call win_gotoid(cur_win_id)
     return
   end
 
@@ -156,6 +160,7 @@ function! s:mix_format(diffmode) abort
         \ 'origfile':  origfile,
         \ 'difffile':  difffile,
         \ 'undofile':  undofile,
+        \ 'win_id':    win_getid(),
         \ 'stdout':    [],
         \ 'stdoutbuf': [],
         \ }
