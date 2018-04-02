@@ -56,8 +56,8 @@ function! s:on_exit(_job, exitval, ...) dict abort
     call system(printf('diff %s %s', self.origfile, self.difffile))
     if !v:shell_error
       echomsg 'No formatting issues found.'
-      if +get(g:, 'mix_format_win_id')
-        let winnr = win_id2win(g:mix_format_win_id)
+      if +get(g:, 'mix_format_diff_win_id')
+        let winnr = win_id2win(g:mix_format_diff_win_id)
         if winnr
           execute winnr 'close'
         endif
@@ -77,11 +77,11 @@ function! s:on_exit(_job, exitval, ...) dict abort
   diffthis
   set foldmethod=manual
 
-  if +get(g:, 'mix_format_win_id') && win_gotoid(g:mix_format_win_id)
+  if +get(g:, 'mix_format_diff_win_id') && win_gotoid(g:mix_format_diff_win_id)
     %delete
   else
     rightbelow vnew
-    let g:mix_format_win_id = win_getid()
+    let g:mix_format_diff_win_id = win_getid()
     set buftype=nofile nobuflisted bufhidden=wipe
     runtime syntax/elixir.vim
   endif
