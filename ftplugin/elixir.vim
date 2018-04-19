@@ -68,12 +68,13 @@ function! s:on_exit(_job, exitval, ...) dict abort
       return
     endif
   else
-    let fdl = &foldlevel
-    let sol = &startofline
-    let &startofline = 0
-    silent edit!
-    let &startofline = sol
-    let &foldlevel = fdl
+    let [fdl, sol, ur] = [&foldlevel, &startofline, &undoreload]
+    let [&startofline, &undoreload] = [0, 10000]
+    try
+      silent edit!
+    finally
+      let [&foldlevel, &startofline, &undoreload] = [fdl, sol, ur]
+    endtry
     call win_gotoid(source_win_id)
     return
   end
