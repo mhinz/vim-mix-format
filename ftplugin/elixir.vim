@@ -36,22 +36,23 @@ function! s:on_exit(_job, exitval, ...) dict abort
     call delete(self.undofile)
   endif
 
+  if a:exitval && get(g:, 'mix_format_silent_errors')
+    for line in self.stdout
+      echomsg line
+    endfor
+    echohl ErrorMsg | echo 'Formatting failed. Check :messages.' | echohl NONE
+    return
+  end
+
+  let old_efm = &errorformat
+  let &errorformat  = '** (%.%#) %f:%l: %m'
+  let &errorformat .= ',%-G%.%#'
+  cgetexpr self.stdout
+  let &errorformat = old_efm
+  cwindow
+
   if a:exitval
-    if get(g:, 'mix_format_silent_errors')
-      for line in self.stdout
-        echomsg line
-      endfor
-      echohl ErrorMsg | echo 'Formatting failed. Check :messages.' | echohl NONE
-    else
-      if !empty(self.stdout)
-        echomsg string(self.stdout)
-        execute len(self.stdout) > 14 ? 14 : len(self.stdout) 'new'
-        set buftype=nofile
-        put =join(self.stdout, \"\n\")
-        1delete
-      endif
-      echohl ErrorMsg | echo 'Formatting failed.' | echohl NONE
-    endif
+    echohl ErrorMsg | echo 'Formatting failed.' | echohl NONE
     return
   endif
 

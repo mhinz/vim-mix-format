@@ -37,14 +37,14 @@ OPTIONS                                                     *mix-format-options*
 >
   let g:mix_format_options = '--check-equivalent'
 <
-* By default this plugin opens a window containing the stacktrace on errors.
+* By default this plugin creates a new |quickfix| list on errors.
   With this option enabled, there will be just a short message in the
   command-line bar. The stacktrace can still be looked up via `:messages`.
 >
   let g:mix_format_silent_errors = 1
 <
-* If you're not using Elixir 1.6 in your project, but want to use the formatter
-  anyway, you can specify the bin directory of an alternative Elixir
+* If you're not using Elixir 1.6 in your project, but want to use the
+  formatter anyway, you can specify the bin directory of an alternative Elixir
   installation:
 >
   let g:mix_format_elixir_bin_path = '~/repo/elixir/bin'
