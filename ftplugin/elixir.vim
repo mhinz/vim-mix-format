@@ -50,6 +50,9 @@ function! s:on_exit(_job, exitval, ...) dict abort
   cgetexpr self.stdout
   let &errorformat = old_efm
   cwindow
+  if &buftype == 'quickfix'
+    let w:quickfix_title = s:build_cmd(fnamemodify(self.origfile, ':.'))
+  endif
 
   if a:exitval
     echohl ErrorMsg | echo 'Formatting failed.' | echohl NONE
