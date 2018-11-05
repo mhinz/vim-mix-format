@@ -45,8 +45,8 @@ function! s:on_exit(_job, exitval, ...) dict abort
   end
 
   let old_efm = &errorformat
-  let &errorformat  = '** (%.%#) %f:%l: %m'
-  let &errorformat .= ',%-G%.%#'
+  let &errorformat  = '%-Gmix format failed%.%#'
+  let &errorformat .= ',** (%.%#) %f:%l: %m'
   cgetexpr self.stdout
   let &errorformat = old_efm
   cwindow
