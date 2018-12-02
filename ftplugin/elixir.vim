@@ -4,6 +4,11 @@ if exists('b:loaded_mix_format')
   finish
 endif
 
+if !exists('g:mix_format_env_cmd')
+  " Workaround for https://github.com/mhinz/vim-mix-format/issues/15
+  let g:mix_format_env_cmd = executable('env') ? ['env', '-u', 'MIX_ENV'] : []
+endif
+
 function! s:on_stdout_nvim(_job, data, _event) dict abort
   if empty(a:data[-1])
     " Second-last item is the last complete line in a:data.
@@ -118,7 +123,7 @@ function! s:get_cmd_from_file(filename) abort
   if has('win32') && &shell =~ 'cmd'
     return cmd
   endif
-  return ['sh', '-c', cmd]
+  return g:mix_format_env_cmd + ['sh', '-c', cmd]
 endfunction
 
 function! s:build_cmd(filename) abort
