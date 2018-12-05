@@ -121,7 +121,7 @@ endfunction
 function! s:get_cmd_from_file(filename) abort
   let cmd = s:build_cmd(a:filename)
   if has('win32') && &shell =~ 'cmd'
-    return cmd
+    return 'cmd /c '. cmd
   endif
   return g:mix_format_env_cmd + ['sh', '-c', cmd]
 endfunction
