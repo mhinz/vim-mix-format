@@ -158,7 +158,7 @@ function! s:mix_format(diffmode) abort
   endif
   let cmd = s:get_cmd_from_file(difffile)
   if &verbose
-    echomsg 'MixFormat: '. join(cmd[2:])
+    echomsg 'MixFormat: '. (type(cmd) == type([]) ? string(cmd) : cmd)
   endif
 
   let undofile = tempname()
