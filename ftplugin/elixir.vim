@@ -45,7 +45,7 @@ function! s:on_exit(_job, exitval, ...) dict abort
     for line in self.stdout
       echomsg line
     endfor
-    echohl ErrorMsg | echo 'Formatting failed. Check :messages.' | echohl NONE
+    redraw | echohl ErrorMsg | echo 'Formatting failed. Check :messages.' | echohl NONE
     return
   end
 
@@ -60,7 +60,7 @@ function! s:on_exit(_job, exitval, ...) dict abort
   endif
 
   if a:exitval
-    echohl ErrorMsg | echo 'Formatting failed.' | echohl NONE
+    redraw | echohl ErrorMsg | echo 'Formatting failed.' | echohl NONE
     return
   endif
 
@@ -145,7 +145,7 @@ endfunction
 
 function! s:mix_format(diffmode) abort
   if &modified
-    echohl WarningMsg | echo 'Unsaved buffer. Quitting.' | echohl NONE
+    redraw | echohl WarningMsg | echo 'Unsaved buffer. Quitting.' | echohl NONE
     return
   endif
 
