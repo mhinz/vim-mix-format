@@ -14,7 +14,8 @@ Use your [favorite plugin manager](https://github.com/mhinz/vim-galore#managing-
 
 ## Commands
 
-* To format the current file, use `:MixFormat`.
+* To format the current file, use `:MixFormat`. Use `:verb MixFormat` to see the
+  exact shell command used.
 
 * The formatter is not perfect yet, so `:MixFormatDiff` will open a diff window
   that can be used for previewing the changes or picking only those that seem
