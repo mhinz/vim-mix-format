@@ -129,6 +129,10 @@ function! s:build_cmd(filename) abort
   let options = get(g:, 'mix_format_options', '--check-equivalent')
 
   let [shellslash, &shellslash] = [&shellslash, 0]
+  let dot_formatter = findfile('.formatter.exs', expand('%:p:h').';')
+  if !empty(dot_formatter)
+    let options .= ' --dot-formatter '. shellescape(fnamemodify(dot_formatter, ':p'))
+  endif
   let filename = shellescape(a:filename)
   let &shellslash = shellslash
 
