@@ -202,7 +202,7 @@ command! -buffer -bar MixFormatDiff call <sid>mix_format(1+'diffmode')
 
 if get(g:, 'mix_format_on_save')
   augroup mix_format
-    autocmd BufWritePre <buffer> noautocmd update | call s:mix_format(0+'diffmode')
+    autocmd BufWritePre <buffer> noautocmd silent update | call s:mix_format(0+'diffmode')
   augroup END
 endif
 
