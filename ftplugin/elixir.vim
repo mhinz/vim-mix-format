@@ -41,6 +41,8 @@ function! s:on_exit(_job, exitval, ...) dict abort
     call delete(self.undofile)
   endif
 
+  execute 'lcd' fnameescape(self.origdir)
+
   if a:exitval && get(g:, 'mix_format_silent_errors')
     for line in self.stdout
       echomsg line
@@ -131,7 +133,7 @@ function! s:build_cmd(filename) abort
   let [shellslash, &shellslash] = [&shellslash, 0]
   let dot_formatter = findfile('.formatter.exs', expand('%:p:h').';')
   if !empty(dot_formatter)
-    let options .= ' --dot-formatter '. shellescape(fnamemodify(dot_formatter, ':p'))
+    let options .= ' --dot-formatter '. shellescape(dot_formatter)
   endif
   let filename = shellescape(a:filename)
   let &shellslash = shellslash
@@ -153,7 +155,23 @@ function! s:mix_format(diffmode) abort
     return
   endif
 
-  let origfile = expand('%:p')
+  let origdir = getcwd()
+
+  let mixfile = findfile('mix.exs', expand('%:p:h').';')
+  if empty(mixfile)
+    if &verbose
+      echomsg 'MixFormat: No mix project found.'
+    endif
+  else
+    let mixroot = fnamemodify(mixfile, ':h')
+    execute 'lcd' fnameescape(mixroot)
+    if &verbose
+      echomsg 'MixFormat: Temporarily changed to:' mixroot
+    endif
+  endif
+
+  let origfile = expand('%')
+
   if a:diffmode
     let difffile = tempname()
     execute 'silent write' fnameescape(difffile)
@@ -171,6 +189,7 @@ function! s:mix_format(diffmode) abort
   let options = {
         \ 'cmd':       type(cmd) == type([]) ? join(cmd) : cmd,
         \ 'diffmode':  a:diffmode,
+        \ 'origdir':   origdir,
         \ 'origfile':  origfile,
         \ 'difffile':  difffile,
         \ 'undofile':  undofile,
