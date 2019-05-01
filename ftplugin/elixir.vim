@@ -9,6 +9,12 @@ if !exists('g:mix_format_env_cmd')
   let g:mix_format_env_cmd = executable('env') ? ['env', '-u', 'MIX_ENV'] : []
 endif
 
+function! s:msg(show, msg) abort
+  if a:show
+    echomsg 'MixFormat: '. a:msg
+  endif
+endfunction
+
 function! s:on_stdout_nvim(_job, data, _event) dict abort
   if empty(a:data[-1])
     " Second-last item is the last complete line in a:data.
@@ -36,18 +42,14 @@ function! s:on_exit(_job, exitval, ...) dict abort
   let source_win_id = win_getid()
   call win_gotoid(self.win_id)
 
+  call s:msg(self.verbose, 'Changing to: '. self.origdir)
+  execute 'lcd' fnameescape(self.origdir)
+
   if filereadable(self.undofile)
     execute 'silent rundo' self.undofile
-    if self.verbose
-      echomsg 'MixFormat: Deleting undo file: '. self.undofile
-    endif
+    call s:msg(self.verbose, 'Deleting undo file: '. self.undofile)
     call delete(self.undofile)
   endif
-
-  if self.verbose
-    echomsg 'MixFormat: Change back to: '. self.origdir
-  endif
-  execute 'lcd' fnameescape(self.origdir)
 
   if a:exitval && get(g:, 'mix_format_silent_errors')
     for line in self.stdout
@@ -108,9 +110,7 @@ function! s:on_exit(_job, exitval, ...) dict abort
   endif
 
   execute 'silent read' fnameescape(self.difffile)
-  if self.verbose
-    echomsg 'MixFormat: Deleting diff file: '. self.difffile
-  endif
+  call s:msg(self.verbose, 'Deleting diff file: '. self.difffile)
   silent! call delete(self.difffile)
   silent 0delete _
   diffthis
@@ -168,14 +168,10 @@ function! s:mix_format(diffmode) abort
 
   let mixfile = findfile('mix.exs', expand('%:p:h').';')
   if empty(mixfile)
-    if &verbose
-      echomsg 'MixFormat: No mix project found.'
-    endif
+    call s:msg(&verbose, 'No mix project found.')
   else
     let mixroot = fnamemodify(mixfile, ':h')
-    if &verbose
-      echomsg 'MixFormat: Change to: '. mixroot
-    endif
+    call s:msg(&verbose, 'Changing to: '. mixroot)
     execute 'lcd' fnameescape(mixroot)
   endif
 
@@ -183,22 +179,15 @@ function! s:mix_format(diffmode) abort
 
   if a:diffmode
     let difffile = tempname()
-    if &verbose
-      echomsg 'MixFormat: Creating diff file: '. difffile
-    endif
+    call s:msg(&verbose, 'Creating diff file: '. difffile)
     execute 'silent write' fnameescape(difffile)
   else
     let difffile = origfile
   endif
   let cmd = s:get_cmd_from_file(difffile)
-  if &verbose
-    echomsg 'MixFormat: '. (type(cmd) == type([]) ? string(cmd) : cmd)
-  endif
 
   let undofile = tempname()
-  if &verbose
-    echomsg 'MixFormat: Creating undo file: '. undofile
-  endif
+  call s:msg(&verbose, 'Creating undo file: '. undofile)
   execute 'silent wundo!' undofile
 
   let options = {
@@ -213,6 +202,8 @@ function! s:mix_format(diffmode) abort
         \ 'stdout':    [],
         \ 'stdoutbuf': [],
         \ }
+
+  call s:msg(&verbose, type(cmd) == type([]) ? string(cmd) : cmd)
 
   if has('nvim')
     silent! call jobstop(s:id)
