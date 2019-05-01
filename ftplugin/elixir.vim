@@ -38,9 +38,15 @@ function! s:on_exit(_job, exitval, ...) dict abort
 
   if filereadable(self.undofile)
     execute 'silent rundo' self.undofile
+    if self.verbose
+      echomsg 'MixFormat: Deleting undo file: '. self.undofile
+    endif
     call delete(self.undofile)
   endif
 
+  if self.verbose
+    echomsg 'MixFormat: Change back to: '. self.origdir
+  endif
   execute 'lcd' fnameescape(self.origdir)
 
   if a:exitval && get(g:, 'mix_format_silent_errors')
@@ -102,6 +108,9 @@ function! s:on_exit(_job, exitval, ...) dict abort
   endif
 
   execute 'silent read' fnameescape(self.difffile)
+  if self.verbose
+    echomsg 'MixFormat: Deleting diff file: '. self.difffile
+  endif
   silent! call delete(self.difffile)
   silent 0delete _
   diffthis
@@ -164,16 +173,19 @@ function! s:mix_format(diffmode) abort
     endif
   else
     let mixroot = fnamemodify(mixfile, ':h')
-    execute 'lcd' fnameescape(mixroot)
     if &verbose
-      echomsg 'MixFormat: Temporarily changed to:' mixroot
+      echomsg 'MixFormat: Change to: '. mixroot
     endif
+    execute 'lcd' fnameescape(mixroot)
   endif
 
   let origfile = expand('%')
 
   if a:diffmode
     let difffile = tempname()
+    if &verbose
+      echomsg 'MixFormat: Creating diff file: '. difffile
+    endif
     execute 'silent write' fnameescape(difffile)
   else
     let difffile = origfile
@@ -184,7 +196,10 @@ function! s:mix_format(diffmode) abort
   endif
 
   let undofile = tempname()
-  execute 'wundo!' undofile
+  if &verbose
+    echomsg 'MixFormat: Creating undo file: '. undofile
+  endif
+  execute 'silent wundo!' undofile
 
   let options = {
         \ 'cmd':       type(cmd) == type([]) ? join(cmd) : cmd,
@@ -194,6 +209,7 @@ function! s:mix_format(diffmode) abort
         \ 'difffile':  difffile,
         \ 'undofile':  undofile,
         \ 'win_id':    win_getid(),
+        \ 'verbose':   &verbose,
         \ 'stdout':    [],
         \ 'stdoutbuf': [],
         \ }
