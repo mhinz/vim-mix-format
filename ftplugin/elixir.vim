@@ -220,6 +220,7 @@ function! s:mix_format(diffmode) abort
           \ 'on_stdout': function('s:on_stdout_nvim'),
           \ 'on_stderr': function('s:on_stdout_nvim'),
           \ 'on_exit':   function('s:on_exit'),
+          \ 'detach':    !has('nvim-0.3.6'),
           \ }))
   else
     silent! call job_stop(s:id)
