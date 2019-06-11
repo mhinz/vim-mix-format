@@ -1,5 +1,5 @@
 if exists('b:loaded_mix_format')
-      \ || fnamemodify(expand('%'), ':e') == 'eex'
+      \ || index(['eex', 'leex'], fnamemodify(expand('%'), ':e')) >= 0
       \ || &compatible
   finish
 endif
