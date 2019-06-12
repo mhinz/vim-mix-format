@@ -1,5 +1,5 @@
 if exists('b:loaded_mix_format')
-      \ || index(['eex', 'leex'], fnamemodify(expand('%'), ':e')) >= 0
+      \ || &filetype != 'elixir'
       \ || &compatible
   finish
 endif
