@@ -62,9 +62,9 @@ function! s:on_exit(_job, exitval, ...) dict abort
   let old_efm = &errorformat
   let &errorformat  = '%-Gmix format failed%.%#'
   let &errorformat .= ',** (%.%#) %f:%l: %m'
-  cgetexpr self.stdout
+  lgetexpr self.stdout
   let &errorformat = old_efm
-  cwindow
+  lwindow
   if &buftype == 'quickfix'
     let w:quickfix_title = s:build_cmd(fnamemodify(self.origfile, ':.'))
   endif
