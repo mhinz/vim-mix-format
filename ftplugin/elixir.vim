@@ -43,7 +43,7 @@ function! s:on_exit(_job, exitval, ...) dict abort
   call win_gotoid(self.win_id)
 
   call s:msg(self.verbose, 'Changing to: '. self.origdir)
-  execute 'lcd' fnameescape(self.origdir)
+  execute 'cd' fnameescape(self.origdir)
 
   if filereadable(self.undofile)
     execute 'silent rundo' self.undofile
@@ -174,7 +174,7 @@ function! s:mix_format(diffmode) abort
   else
     let mixroot = fnamemodify(mixfile, ':h')
     call s:msg(&verbose, 'Changing to: '. mixroot)
-    execute 'lcd' fnameescape(mixroot)
+    execute 'cd' fnameescape(mixroot)
   endif
 
   let origfile = expand('%')
