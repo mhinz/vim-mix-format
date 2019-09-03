@@ -4,6 +4,9 @@ if exists('b:loaded_mix_format')
   finish
 endif
 
+" Is 'cwd' key for job_start() options available?
+let s:has_cwd = has('nvim') || has('patch-8.0.902')
+
 if !exists('g:mix_format_env_cmd')
   " Workaround for https://github.com/mhinz/vim-mix-format/issues/15
   let g:mix_format_env_cmd = executable('env') ? ['env', '-u', 'MIX_ENV'] : []
@@ -42,8 +45,10 @@ function! s:on_exit(_job, exitval, ...) dict abort
   let source_win_id = win_getid()
   call win_gotoid(self.win_id)
 
-  call s:msg(self.verbose, 'Changing to: '. self.origdir)
-  execute 'cd' fnameescape(self.origdir)
+  if !s:has_cwd
+    call s:msg(self.verbose, 'Changing to: '. self.origdir)
+    execute 'cd' fnameescape(self.origdir)
+  endif
 
   if filereadable(self.undofile)
     execute 'silent rundo' self.undofile
@@ -142,10 +147,6 @@ function! s:build_cmd(filename) abort
   let options = get(g:, 'mix_format_options', '--check-equivalent')
 
   let [shellslash, &shellslash] = [&shellslash, 0]
-  let dot_formatter = findfile('.formatter.exs', expand('%:p:h').';')
-  if !empty(dot_formatter)
-    let options .= ' --dot-formatter '. shellescape(dot_formatter)
-  endif
   let filename = shellescape(a:filename)
   let &shellslash = shellslash
 
@@ -173,11 +174,13 @@ function! s:mix_format(diffmode) abort
     call s:msg(&verbose, 'No mix project found.')
   else
     let mixroot = fnamemodify(mixfile, ':h')
-    call s:msg(&verbose, 'Changing to: '. mixroot)
-    execute 'cd' fnameescape(mixroot)
+    if !s:has_cwd
+      call s:msg(&verbose, 'Changing to: '. mixroot)
+      execute 'cd' fnameescape(mixroot)
+    endif
   endif
 
-  let origfile = expand('%')
+  let origfile = expand('%:p')
 
   if a:diffmode
     let difffile = tempname()
@@ -204,6 +207,10 @@ function! s:mix_format(diffmode) abort
         \ 'stdout':    [],
         \ 'stdoutbuf': [],
         \ }
+
+  if s:has_cwd && exists('mixroot')
+    let options.cwd = mixroot
+  endif
 
   call s:msg(&verbose, type(cmd) == type([]) ? string(cmd) : cmd)
 
