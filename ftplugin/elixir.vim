@@ -224,12 +224,12 @@ function! s:mix_format(diffmode) abort
           \ }))
   else
     silent! call job_stop(s:id)
-    let s:id = job_start(cmd, {
+    let s:id = job_start(cmd, extend({
           \ 'in_io':   'null',
           \ 'err_io':  'out',
           \ 'out_cb':  function('s:on_stdout_vim', options),
           \ 'exit_cb': function('s:on_exit', options),
-          \ })
+          \ }, has_key(options, 'cwd') ? {'cwd': options.cwd} : {}))
   endif
 endfunction
 
