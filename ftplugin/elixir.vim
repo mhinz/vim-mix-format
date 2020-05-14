@@ -92,14 +92,14 @@ function! s:on_exit(_job, exitval, ...) dict abort
       return
     endif
   else
-    let [fdl, sol, ur] = [&foldlevel, &startofline, &undoreload]
+    let [sol, ur] = [&startofline, &undoreload]
     let [&startofline, &undoreload] = [0, 10000]
-    let view = winsaveview()
+    mkview
     try
       silent edit!
     finally
-      call winrestview(view)
-      let [&foldlevel, &startofline, &undoreload] = [fdl, sol, ur]
+      let [&startofline, &undoreload] = [sol, ur]
+      loadview
     endtry
     call win_gotoid(source_win_id)
     return
