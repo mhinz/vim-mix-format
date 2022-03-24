@@ -1,5 +1,6 @@
 if exists('b:loaded_mix_format')
       \ || &filetype != 'elixir'
+      \ || &filetype != 'eelixir'
       \ || &compatible
   finish
 endif
