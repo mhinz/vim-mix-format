@@ -144,7 +144,7 @@ endfunction
 
 function! s:build_cmd(filename) abort
   let elixir_bin_path = get(g:, 'mix_format_elixir_bin_path')
-  let options = get(g:, 'mix_format_options', '--check-equivalent')
+  let options = get(g:, 'mix_format_options')
 
   let [shellslash, &shellslash] = [&shellslash, 0]
   let dot_formatter = findfile('.formatter.exs', expand('%:p:h').';')
